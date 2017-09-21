@@ -2,7 +2,7 @@
 Contributors: emldesk
 Tags: emldesk, email, marketing, subscribe, plugin, signup, form 
 Requires at least: 3.0.1
-Tested up to: 4.8.1 
+Tested up to: 4.8.2
 Stable tag: trunk
 License: GPLv2
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
