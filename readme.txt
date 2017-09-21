@@ -47,4 +47,4 @@ EmlDesk Subscription Forms can be added to the sidebar or anywhere shortcodes ar
 * Verified compatibility with WordPress 4.3.1
 
 = 1.1 =
-* Verified compatibility with WordPress 4.8.1
+* Verified compatibility with WordPress 4.8.2
