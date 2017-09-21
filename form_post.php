@@ -1,6 +1,7 @@
 <?php
+	if (!defined('ABSPATH')) die();
 
-	$url = 'https://go.emldesk.net/libraries/form_wizard/process_subscribe.asp';
+	$url = 'https://go.emldesk.com/libraries/form_wizard/process_subscribe.asp';
 	$data = $_POST;
 	
 	$query = http_build_query($data);
@@ -23,7 +24,12 @@
 	return $firstStatusCode;
 
 	//echo "Status code (before first redirect): $firstStatusCode<br>\n";
-
+	
+	//Run preliminary permissions checks
+	if ( !isset($_REQUEST['_emldesk_wpnonce']) || !wp_verify_nonce($REQUEST['_emldesk_wpnonce'], 'emldesk-update-form') ) return;
+	$post_type = isset($_POST['post_type']) ? $_POST['post_type'] : 'post';
+	$post_type_object = get_post_type_object($post_type);
+	if (!current_user_can($post_type_object->cap->edit_posts)) return;
 
 	/**
 	 * parse_http_response_header

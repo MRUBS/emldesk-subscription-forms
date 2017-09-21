@@ -1,13 +1,35 @@
 <?php
 /*
 Plugin Name: EmlDesk Subscription Forms
-Plugin URI: https://go.emldesk.net/Integration/WordPress-SubscriptionForms/
+Plugin URI: https://go.emldesk.com/Integration/WordPress-SubscriptionForms/
 Description: Add EmlDesk subscription forms to your WordPress site.
 Version: 1.0.4
 Author: EmlDesk Inc.
-Author URI: http://www.emldesk.net
+Author URI: http://www.emldesk.com
 License:  GNU General Public License v2
 */
+
+if (!defined('ABSPATH')) {
+	header('Status: 403 Forbidden');
+	header('HTTP/1.1 403 Forbidden');
+	die();
+}
+
+define('EMLDESK_MINIMUM_WP_VER', '4.5');
+
+global $wp_version;
+if (version_compare($wp_version, EMLDESK_MINIMUM_WP_VER, '>=')) {
+	global $emldesk_subscription_frorms;
+	//$emldesk_subscription_forms = new EmlDesk_Subscription_Forms(__FILE__);
+} else {
+	add_action('admin_notices', 'emldesk_wp_incompat_notice');
+}
+
+function emldesk_wp_incompat_notice() {
+	echo '<div class="error"><p>';
+	printf(__('EmlDesk Subcription Forms requires WordPress %s or above. Please upgrade to the latest version of WordPress to enable EmlDesk Subcription Forms on your blog, or deactivate EmlDesk Subcription Forms to remove this notice.', 'emldesk_subscription_forms'), EMLDESK_MINIMUM_WP_VER);
+	echo "</p></div>\n";
+}
 
 class EmlDesk_SubscriptionForm_Widget extends	WP_Widget
 {
@@ -100,7 +122,7 @@ function get_subscription_form($api_token, $form_id)
 							)
 			);
 
-	$url = 'https://services.emldesk.net/lists/subscriptionform/' . $form_id;
+	$url = 'https://services.emldesk.com/lists/subscriptionform/' . $form_id;
 
 	$response = wp_remote_get($url, $args);
 
