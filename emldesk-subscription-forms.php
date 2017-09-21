@@ -3,9 +3,9 @@
 Plugin Name: EmlDesk Subscription Forms
 Plugin URI: https://go.emldesk.net/Integration/WordPress-SubscriptionForms/
 Description: Add EmlDesk subscription forms to your WordPress site.
-Version: 1.0.2
-Author: EmlDesk
-Author URI: https://www.emldesk.com
+Version: 1.0.4
+Author: EmlDesk Inc.
+Author URI: http://www.emldesk.net
 License:  GNU General Public License v2
 */
 
