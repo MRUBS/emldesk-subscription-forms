@@ -1,19 +1,21 @@
 <?php
-	if (!defined('ABSPATH')) die();
+	if ( ! defined( 'ABSPATH' ) ) exit;   // Exit if accessed directly
 
 	$url = 'https://go.emldesk.com/libraries/form_wizard/process_subscribe.asp';
 	$data = $_POST;
 	
 	$query = http_build_query($data);
-
-	$options['http'] = array(
-			'header'  => "Content-type: application/x-www-form-urlencoded\r\n"
-							. "Content-Length: " . strlen($query),
-			'method'  => 'POST',
-			'content' => $query
+	
+	$opts = array('http' =>
+    array(
+        'method'  => 'POST',
+        'header'  => 'Content-type: application/x-www-form-urlencoded',
+        'content' => $query
+		)
 	);
 
-	$context  = stream_context_create($options);
+	$context  = stream_context_create($opts);
+
 	$body = file_get_contents($url, false, $context);
 
 	$responses = parse_http_response_header($http_response_header);
@@ -24,12 +26,6 @@
 	return $firstStatusCode;
 
 	//echo "Status code (before first redirect): $firstStatusCode<br>\n";
-	
-	//Run preliminary permissions checks
-	if ( !isset($_REQUEST['_emldesk_wpnonce']) || !wp_verify_nonce($REQUEST['_emldesk_wpnonce'], 'emldesk-update-form') ) return;
-	$post_type = isset($_POST['post_type']) ? $_POST['post_type'] : 'post';
-	$post_type_object = get_post_type_object($post_type);
-	if (!current_user_can($post_type_object->cap->edit_posts)) return;
 
 	/**
 	 * parse_http_response_header
@@ -37,6 +33,7 @@
 	 * @param array $headers as in $http_response_header
 	 * @return array status and headers grouped by response, last first
 	 */
+
 	function parse_http_response_header(array $headers)
 	{
 		$responses = array();
