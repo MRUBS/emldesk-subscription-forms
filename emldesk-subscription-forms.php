@@ -3,7 +3,7 @@
 Plugin Name: EmlDesk Subscription Forms
 Plugin URI: https://go.emldesk.com/Integration/WordPress-SubscriptionForms/
 Description: Add EmlDesk subscription forms to your WordPress site.
-Version: 1.1
+Version: 1.2
 Author: EmlDesk Inc.
 Author URI: http://www.emldesk.com
 License:  GNU General Public License v2
@@ -45,20 +45,24 @@ if ( ! defined( 'ABSPATH' ) ) exit;   // Exit if accessed directly
 /********** VERSION CHECK & INITIALIZATION **********/
 
 global $wp_version;
-if (version_compare($wp_version, EMLDESK_MINIMUM_WP_VER, '>=')) {
+if (version_compare($wp_version, EMLDESK_MINIMUM_WP_VER, '>='))
+{
 	global $emldesk_subscription_forms;
 	//$emldesk_subscription_forms = new EmlDesk_Subscription_Forms(__FILE__);
-} else {
+}
+else
+{
 	add_action('admin_notices', 'emldesk_wp_incompat_notice');
 }
 
-function emldesk_wp_incompat_notice() {
+function emldesk_wp_incompat_notice()
+{
 	echo '<div class="error"><p>';
 	printf(__('EmlDesk Subcription Forms requires WordPress %s or above. Please upgrade to the latest version of WordPress to enable EmlDesk Subcription Forms on your blog, or deactivate EmlDesk Subcription Forms to remove this notice.', 'emldesk_subscription_forms'), EMLDESK_MINIMUM_WP_VER);
 	echo "</p></div>\n";
 }
 
-class EmlDesk_Subscription_Form_Widget extends	WP_Widget
+class EmlDesk_Subscription_Form_Widget extends WP_Widget
 {
     public function __construct()
     {
@@ -98,7 +102,6 @@ class EmlDesk_Subscription_Form_Widget extends	WP_Widget
         $form_id = (isset($instance["form_id"])) ? $instance["form_id"] : "";
 		$form_title = (isset($instance["form_title"])) ? $instance["form_title"] : "";
         ?>
-		<form method="post">   
             <p>
                 API Token:
                 <input type="text" name="<?php echo $this->get_field_name('api_token');?>" id="emldesk_api_token" value="<?php echo esc_attr($api_token); ?>" style="width: 100%;" />
@@ -116,7 +119,6 @@ class EmlDesk_Subscription_Form_Widget extends	WP_Widget
 				<input type="text" name="<?php echo $this->get_field_name('form_title');?>" id="emldesk_form_title" value="<?php echo esc_attr($form_title); ?>" style="width: 100%;" />
 				<?php wp_nonce_field( 'form_title_' . $form_title, 'nonce_token' ); ?>
             </p>
-		</form>
         <?php
 		$url = wp_nonce_url( admin_url(), 'api_token_' . $api_token, 'nonce_token' );
 		$url = add_query_arg( 'api_token', $api_token, $url ); // Add the id of the user we send to
@@ -126,7 +128,8 @@ class EmlDesk_Subscription_Form_Widget extends	WP_Widget
 		$url = add_query_arg( 'form_title', $form_title, $url ); // Add the id of the user we send to
     }
 	
-	function emldesk_form_nonce_token($post) {
+	function emldesk_form_nonce_token($post)
+	{
 		$name='api_token'; // Make sure this is unique, prefix it with your plug-in/theme name
 		$name='form_id'; // Make sure this is unique, prefix it with your plug-in/theme name
 		$name='form_title'; // Make sure this is unique, prefix it with your plug-in/theme name
@@ -139,7 +142,8 @@ class EmlDesk_Subscription_Form_Widget extends	WP_Widget
 		// Your meta box...
 	}
 
-	function emldesk_wp_nonce( $post_id ) {
+	function emldesk_wp_nonce( $post_id )
+	{
 		// Check its not an auto save
 		if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE )
 			return;
@@ -230,18 +234,18 @@ function emldesk_shortcodes()
 	return "";
 }
 
+/*** Register Widget ***/
 function emldesk_register_widget()
 {
     register_widget("EmlDesk_Subscription_Form_Widget");
 }
+add_action("widgets_init", "emldesk_register_widget");
 
+/*** Register Shortcode ***/
 function emldesk_register_shortcodes()
 {
     add_shortcode("emldesk_subscriptionform", "emldesk_shortcodes");
 }
-
-add_action('save_post','emldesk_form_nonce_token');
-add_action("widgets_init", "emldesk_register_widget");
 add_action("init", "emldesk_register_shortcodes");
-
+add_filter('widget_text','do_shortcode');
 ?>
