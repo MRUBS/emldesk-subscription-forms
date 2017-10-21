@@ -48,3 +48,7 @@ EmlDesk Subscription Forms can be added to the sidebar or anywhere shortcodes ar
 
 = 1.1 =
 * Verified compatibility with WordPress 4.8.2
+
+= 1.2 =
+* Fixed Widget Disappearing Problem
+* Enable Shortcode For Sidebar
